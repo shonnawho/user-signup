@@ -17,9 +17,9 @@ def index():
     return template.render()
 
 
-@app.route('/signup')
-def display_signup_form():
-   return render_template('signup_form.html', username='', username_error='', password_error='')
+#app.route('/signup')
+#def display_signup_form():
+   #return render_template('signup_form.html', username='', username_error='', password_error='')
 
 
 
@@ -38,7 +38,7 @@ def validate_signup():
     email_error = ''
 
     if username == '':
-        username_error = 'Field can not be left empty'
+        username_error = 'Field can not be left empt'
 
     else:
         
@@ -65,8 +65,8 @@ def validate_signup():
         if len(email) < 3 or len(email) > 20:
          email_error = 'invaild email'
     
-    if not username_error and not password_verify_error:
-        # username = username
+    if not username_error and not password_error:
+        username = username
         return redirect('/vaild-signup?username={0}'.format(username))
     else:
         template = jinja_env.get_template('signup_form.html')
