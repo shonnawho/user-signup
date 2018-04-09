@@ -17,9 +17,9 @@ def index():
     return template.render()
 
 
-#@app.route('/signup')
-#def display_signup_form():
- #   return render_template('signup_form.html', username='', username_error='', password_error='')
+@app.route('/signup')
+def display_signup_form():
+   return render_template('signup_form.html', username='', username_error='', password_error='')
 
 
 
@@ -69,8 +69,8 @@ def validate_signup():
         # username = username
         return redirect('/vaild-signup?username={0}'.format(username))
     else:
-
-        return render_template('signup_form.html', username=username, password_error=password_error, username_error=username_error, password_input=password_input, password_verify_error=password_verify_error,email_error=email_error) 
+        template = jinja_env.get_template('signup_form.html')
+        return template.render( username=username, password_error=password_error, username_error=username_error, password_input=password_input, password_verify_error=password_verify_error,email_error=email_error) 
         
 
 
