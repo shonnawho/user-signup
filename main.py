@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template
 import cgi
 import os
 import jinja2
+import re
 
 
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
@@ -21,7 +22,7 @@ def index():
 #def display_signup_form():
    #return render_template('signup_form.html', username='', username_error='', password_error='')
 
-
+valid_email = re.compile("\w+@\w+.(net|edu|com|org)")
 
 @app.route('/signup', methods=['POST'])
 def validate_signup():
@@ -37,40 +38,45 @@ def validate_signup():
     password_verify_error = ''
     email_error = ''
 
-    if username == '':
-        username_error = 'Field can not be left empt'
-
-    else:
+    
         
-         if len(username) < 3 or len(username) > 20:
-            username_error = 'Invaild username'
+    if len(username) < 3 or len(username) > 20:
+        username_error = 'Invaild username'
 
 
-    if password_input == '':
-        password_error = 'Password is empty'
-
-    else:
-        
-         if len(password_input) < 3 or len(password_input) > 20:
-            password_error = 'Invaild password'
+    
+    if len(password_input) < 3 or len(password_input) > 20:
+        password_error = 'Invaild password'
             
 
     if password_input != password_verify:
         password_verify_error = 'Passwords do not match'
     
-
-    if email == '':
-        email = email
-    else:
-        if len(email) < 3 or len(email) > 20:
-         email_error = 'invaild email'
+    if email:
     
-    if not username_error and not password_error:
+        if valid_email.match(email):
+            email_error = 'invalid email'
+
+
+
+        if len(email) < 3 or len(email) > 20:
+            email_error = 'invaild email'
+        
+    
+
+    if username_error or password_error or email_error:
+        password_input = ''
+        password_verify = ''
         username = username
-        return redirect('/vaild-signup?username={0}'.format(username))
+        return render_template('signup_form.html', username=username, password_error=password_error, username_error=username_error, password_input=password_input,
+         password_verify_error=password_verify_error,email_error=email_error) 
+                
+        
+        
     else:
         template = jinja_env.get_template('signup_form.html')
-        return template.render( username=username, password_error=password_error, username_error=username_error, password_input=password_input, password_verify_error=password_verify_error,email_error=email_error) 
+        return redirect('/vaild-signup?username={0}'.format(username))
+
         
 
 
